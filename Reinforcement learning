@@ -1,0 +1,596 @@
+import numpy as np
+
+
+
+
+def score(pval, price, aa, posr, posc, tot_row, tot_col):
+    if (pval == ">"):
+
+        if (posc < tot_col - 1):
+            posc = posc + 1
+            price = price - 1
+
+
+        else:
+            # pval = aa[posr][posc]
+            price = price - 1
+
+
+    elif (pval == ">>"):
+
+        if (posc < tot_col - 1):
+            posc = posc + 1
+            price = price - 101
+
+
+        else:
+            # pval = aa[posr][posc]
+            price = price - 101
+
+
+
+    elif (pval == "v"):
+        if (posr < tot_row - 1):
+            posr = posr + 1
+            price = price - 1
+            # pval = aa[posr][posc]
+        else:
+            price = price - 1
+
+
+    elif (pval == "vv"):
+        if (posr < tot_row - 1):
+            posr = posr + 1
+            price = price - 101
+            # pval = aa[posr][posc]
+        else:
+            price = price - 101
+
+    elif (pval == "^"):
+        if (posr - 1 >= 0):
+            posr = posr - 1
+            price = price - 1
+        else:
+            # pval = aa[posr][posc]
+            price = price - 1
+
+    elif (pval == "^^"):
+        if (posr - 1 >= 0):
+            posr = posr - 1
+            price = price - 101
+        else:
+            # pval = aa[posr][posc]
+            price = price - 101
+
+    elif (pval == "<"):
+        if (posc - 1 >= 0):
+            posc = posc - 1
+            price = price - 1
+        else:
+            # pval = aa[posr][posc]
+            price = price - 1
+
+    elif (pval == "<<"):
+        if (posc - 1 >= 0):
+            posc = posc - 1
+            price = price - 101
+        else:
+            # pval = aa[posr][posc]
+            price = price - 101
+
+    # elif (pval == "*"):
+    # price = price + 100
+
+    elif (pval == "*"):
+        price = price + 100
+
+    return price, posr, posc
+    # break;
+
+
+def imp(u, p, row):
+    for i in range(len(u)):
+        y = i % row
+        x = i / row
+
+        if (p[i] == "*"):
+            p[i] = '*'
+
+
+        elif (x == 0 and y == 0):
+            if (u[(x * row) + (y + 1)] >= u[(x + 1) * row + y]):
+                p[i] = ">"
+            else:
+                p[i] = "v"
+
+
+
+
+
+
+        elif (x - 1 < 0 and y < row - 1 and y - 1 >= 0):
+            if (u[x * row + (y - 1)] >= u[(x + 1) * row + y] and u[x * row + (y - 1)] >= u[x * row + (y + 1)]):
+                p[i] = "<"
+
+            elif(u[x * row + (y + 1)] >= u[(x + 1) * row + y] and u[x * row + (y + 1)] >= u[x * row + (y - 1)]):
+
+                p[i] = ">"
+
+            else:
+                p[i] = "v"
+
+
+        elif (x - 1 >= 0 and y - 1 < 0 and x < row - 1):#10########c
+
+            if (u[x * row + (y + 1)] >= u[((x + 1) * row )+ y] and u[x * row + (y + 1)] >= u[(x - 1) * row + y]):
+                p[i] = ">"
+
+            elif (u[(x + 1) * row + y] >= u[((x -1) * row) + y] and u[(x + 1) * row + y] >= u[x * row + (y + 1)]):
+                p[i] = "v"
+
+            else:
+                p[i] = "^"
+
+
+
+        elif (y == row - 1 and x - 1 >= 0 and x < row - 1):##########c
+
+            if (u[x * row + (y - 1)] >= u[((x + 1) * row) + y] and u[(x * row) + (y - 1)] >= u[((x - 1) * row )+ y]):
+                p[i] = "<"
+
+            elif (u[((x-1) * row)+ y ] <= u[(x + 1) * row + y] and u[(x + 1) * row + y] >=u[(x) * row + (y-1)]):
+                p[i] = "v"
+
+            else:
+                p[i] = "^"
+
+
+        elif (x == row - 1 and y - 1 >= 0 and y < row - 1):
+            if (u[((x - 1) * row) + y] <= u[(x * row) + (y - 1)] and u[(x) * row + (y - 1)] >= u[(x * row)+ (y + 1)]):
+                p[i] = "<"
+
+            elif (u[(x) * row + (y+1)] >= u[((x) * row) + (y - 1)] and u[((x) * row) + (y+1)] >= u[((x-1) * row) + y]):
+                p[i] = ">"
+
+            else:
+                p[i] = "^"
+
+
+        elif (x == row - 1 and y == 0):
+            if (u[(x * row) + (y + 1)] >= u[(x - 1) * (row + y)]):
+                p[i] = ">"
+
+            else:
+                p[i] = "^"
+
+        elif (x == row - 1 and y == row - 1):
+            if (u[(x * row) + (y - 1)] >= u[((x - 1) * row) + y]):
+                p[i] = "<"
+
+            else:
+                p[i] = "^"
+
+
+
+        elif (x == 0 and y == row - 1):
+
+            if (u[(x * row )+ (y - 1)] >= u[((x + 1) * row) + y]):
+                p[i] = "<"
+
+            else:
+                p[i] = "v"
+
+
+
+        else:
+
+
+            if (u[(x * row)+ (y - 1)] >= u[((x + 1) * row) + y] and u[(x * row) + (y - 1)] >= u[((x - 1) * row) + y] and u[(x * row) + (y - 1)] >= u[(x * row) + (y + 1)]):
+                p[i] = "<"
+
+            elif (u[(x) * row + y + 1] >= u[(x + 1) * row + y] and u[x * row + y + 1] >= u[((x - 1) * row) + y] and u[(x * row) + (y + 1)] >= u[(x * row) + (y - 1)]):
+                p[i] = ">"
+
+            elif (u[((x) * row) + (y - 1)] <= u[((x + 1) * row) + y] and u[((x + 1) * row) + y] >= u[((x - 1) * row) + y] and u[(x + 1) * row + y] >= u[(x * row )+ (y + 1)]):
+                p[i] = "v"
+
+            else:
+                p[i] = "^"
+
+    return p
+
+
+def calc(r, ga, dact, d, map, row, col, p, u):
+    listt = []
+
+    for i in range(row * col):
+
+        y = i % row
+        x = i / col
+        ss = 0
+        # ac=map[p[i]]
+        for ac in range(4):
+
+            if (p[i] == "*" or p[i] == "#"):
+                ss = 0
+
+
+            elif (x == 0 and y == 0):
+                ss = u[(x * row) + y] * d[dact[ac]]["up"] + u[((x + 1) * row) + (y)] * d[dact[ac]]["down"] + u[
+                    (x * row) + y] * d[dact[ac]]["left"] + u[(x * row) + (y + 1)] * d[dact[ac]]["right"]
+
+            elif (x - 1 < 0 and y < row - 1 and y - 1 >= 0):
+                ss = u[(x * row) + y] * d[dact[ac]]["up"] + u[((x + 1) * row) + (y)] * d[dact[ac]]["down"] + u[
+                    (x * row) + (y - 1)] * d[dact[ac]]["left"] + u[(x * row) + (y + 1)] * d[dact[ac]]["right"]
+
+            elif (x - 1 >= 0 and y - 1 < 0 and x < row - 1):
+
+                ss = u[((x - 1) * row) + y] * d[dact[ac]]["up"] + u[((x + 1) * row) + (y)] * d[dact[ac]]["down"] + u[
+                    x * row + y] * d[dact[ac]]["left"] + u[(x * row) + (y + 1)] * d[dact[ac]]["right"]
+
+            elif (y == row - 1 and x - 1 >= 0 and x < row - 1):
+                ss = u[((x - 1) * row) + y] * d[dact[ac]]["up"] + u[((x + 1) * row) + (y)] * d[dact[ac]]["down"] + u[
+                    (x * row) + (y - 1)] * d[dact[ac]]["left"] + u[(x * row) + y] * d[dact[ac]]["right"]
+
+
+            elif (x == row - 1 and y - 1 >= 0 and y < row - 1):
+                ss = u[(x - 1) * row + y] * d[dact[ac]]["up"] + u[x * row + (y)] * d[dact[ac]]["down"] + u[
+                    x * row + y - 1] * d[dact[ac]]["left"] + u[x * row + (y + 1)] * d[dact[ac]]["right"]
+
+            elif (x == row - 1 and y == 0):
+                ss = u[((x - 1) * row) + y] * d[dact[ac]]["up"] + u[x * row + (y)] * d[dact[ac]]["down"] + u[
+                    x * row + y] * d[dact[ac]]["left"] + u[x * row + y + 1] * d[dact[ac]]["right"]
+
+            elif (x == row - 1 and y == row - 1):
+                ss = u[(x - 1) * row + y] * d[dact[ac]]["up"] + u[x * row + (y)] * d[dact[ac]]["down"] + u[
+                    (x * row) + (y - 1)] * d[dact[ac]]["left"] + u[x * row + y] * d[dact[ac]]["right"]
+
+
+            elif (x == 0 and y == row - 1):
+                ss = u[(x * row) + y] * d[dact[ac]]["up"] + u[((x + 1) * row) + (y)] * d[dact[ac]]["down"] + u[
+                    (x * row) + (y - 1)] * d[dact[ac]]["left"] + u[(x * row) + y] * d[dact[ac]]["right"]
+
+            # elif(y==row-1 and x-1>=0 and x<row-1):
+            # ss = u[x*3+y-1] * d[dact[ac]]["up"]+ u[x*3+(y)] * d[dact[ac]]["down"] + u[x-1*3+y] * d[dact[ac]]["left"] + u[x+1*3+y] * d[dact[ac]]["right"]
+
+            else:
+                ss = u[((x - 1) * row) + y] * d[dact[ac]]["up"] + u[((x + 1) * row) + (y)] * d[dact[ac]]["down"] + u[
+                    ((x * row) + (y - 1))] * d[dact[ac]]["left"] + u[(x * row) + (y + 1)] * d[dact[ac]]["right"]
+
+            listt.append(ss)
+
+        ss = max(listt)
+        listt = []
+
+        u[i] = r[i] + ga * ss
+
+    return u
+
+
+######### ############# ##################
+
+final=[]
+file = open("ii.txt", "r")
+l = file.readlines()
+l = map(lambda l: l.strip(), l)
+
+dimen = int(l[0])
+cars = int(l[1])
+obs = int(l[2])
+cordo = l[3:3 + obs]
+
+    #print "dimensions", dimen
+
+    #print "number of cars", cars
+    #print "number of obstacle", obs
+    ################################################
+    #print("obstacle cordinate")
+    #print cordo
+
+x_cordinateobs = []
+y_cordinateobs = []
+for t in range(0, obs):
+    x, y = l[3 + t].strip("\n").split(",")
+    x_cordinateobs.append(int(x))
+    y_cordinateobs.append(int(y))
+
+    #print(x_cordinateobs)
+    #print(y_cordinateobs)
+    ###############################################
+    #print("start of each car")
+start = l[3 + obs:3 + obs + cars]
+
+    #print start
+x_cordinatestart = []
+y_cordinatestart = []
+for i in range(0, cars):
+    x, y = l[3 + obs + i].strip("\n").split(",")
+    x_cordinatestart.append(int(x))
+    y_cordinatestart.append(int(y))
+
+    #print(x_cordinatestart)
+    #print(y_cordinatestart)
+
+    ######################################
+    #print("end of each car")
+terminal = l[3 + obs + cars:3 + obs + cars + cars]
+
+    #print terminal
+
+x_cordinateend = []
+y_cordinateend = []
+for i in range(0, cars):
+    x, y = l[3 + obs + cars + i].strip("\n").split(",")
+    x_cordinateend.append(int(x))
+    y_cordinateend.append(int(y))
+
+    #print(x_cordinateend)
+    #print(y_cordinateend)
+
+    ##################################################
+
+arr = np.zeros((dimen, dimen))
+
+    ######     placing obstacle
+i = 0
+j = 0
+for i in range(0, len(x_cordinateobs)):
+    arr[x_cordinateobs[i]][y_cordinateobs[i]] = -100
+
+
+for i in range(0, len(x_cordinatestart)):
+    arr[x_cordinatestart[i]][y_cordinatestart[i]] = 111
+    break
+
+    #for i in range(0, len(x_cordinateend)):
+        #arr[x_cordinateend[i]][y_cordinateend[i]] = 100
+
+
+    #print(arr)
+
+    # arr1 = np.reshape(arr, (1,np.product(arr.shape)))[0]
+
+arr1 = np.ravel(arr)
+
+arr2 = np.zeros(dimen*dimen)
+
+for i in range(0, len(arr1)):
+    if (arr1[i] == 100 or arr1[i] == -100):
+        arr1[i] = arr1[i]
+    else:
+        arr1[i] = -1
+
+    #print(arr2)
+reward1 = arr1[:]
+
+rt=dimen
+ct=dimen
+tot_row = rt
+tot_col = ct
+
+ll=x_cordinateend
+lly=y_cordinateend
+
+
+
+
+    #print(reward1)
+
+    # for kl in range(0,tot_row+2):
+    # if not np.any(TM[kl]):
+
+
+for iii in range(0,cars):
+
+
+        #if(iii==0):
+
+
+
+    if(iii-1>=0):
+
+        arr[x_cordinateend[iii-1]] [y_cordinateend[iii-1]]=0
+
+    arr[x_cordinateend[iii]][y_cordinateend[iii]] = 100
+
+
+
+
+
+        #print(arr)
+
+        # arr1 = np.reshape(arr, (1,np.product(arr.shape)))[0]
+
+    arr1 = np.ravel(arr)
+
+    arr2 = np.zeros(dimen * dimen)
+
+    for i in range(0, len(arr1)):
+        if (arr1[i] == 100 or arr1[i] == -100):
+            arr1[i] = arr1[i]
+        else:
+            arr1[i] = -1
+
+        #print(arr2)
+    reward1 = arr1[:]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #####################################
+
+    dact = {0: "up", 1: "down", 2: "left", 3: "right"}
+
+    d = {"up": {"up": 0.7, "down": 0.1, "left": 0.1, "right": 0.1},
+         "down": {"up": 0.1, "down": 0.7, "left": 0.1, "right": 0.1},
+         "left": {"up": 0.1, "down": 0.1, "left": 0.7, "right": 0.1},
+         "right": {"up": 0.1, "down": 0.1, "left": 0.1, "right": 0.7}}
+
+    map = {"^": 0, "v": 1, "<": 2, ">": 3, "*": "*"}
+
+    row = tot_col
+    col = tot_row
+
+    n = row * col
+
+    p = [">"] * n
+
+    k = x_cordinateend[iii] * tot_col + y_cordinateend[iii]
+    p[k] = "*"
+
+    u = [0] * (n)
+
+    r = reward1
+
+    # r=[100,-1,-1,-100,-1,-1,-1,-1,-1]
+
+    p1 = p[:]
+
+    ga = 0.9
+
+    u1 = u[:]
+    while True:
+
+        u1 = u[:]
+
+        p1 = p[:]
+
+
+        u = calc(r, ga, dact, d, map, row, col, p, u)
+        a = imp(u, p, row)
+
+
+        if (u1 == u):
+            print(a)
+
+            break
+
+        #p1 = p[:]
+
+
+        #print(a)
+
+
+    aa = []
+    j = 0
+    c = tot_col
+
+    for i in range(0, tot_row):
+        aa.append(a[j:c])
+        j = c
+        c = c + tot_row
+
+    price = 0
+    tt = 0
+    for j in range(0, len(x_cordinateobs)):
+
+        tt = aa[x_cordinateobs[j]][y_cordinateobs[j]]
+        if (tt == ">"):
+            aa[x_cordinateobs[j]][y_cordinateobs[j]] = ">>"
+
+        elif (tt == "<"):
+            aa[x_cordinateobs[j]][y_cordinateobs[j]] = "<<"
+
+        elif (tt == "v"):
+            aa[x_cordinateobs[j]][y_cordinateobs[j]] = "vv"
+
+        elif (tt == "^"):
+            aa[x_cordinateobs[j]][y_cordinateobs[j]] = "^^"
+
+    posr = x_cordinatestart[iii]
+    posc = y_cordinatestart[iii]
+    print(aa)
+
+    pval = aa[posr][posc]  # position
+
+    dopp = {">": "<", "<": ">", "v": "^", "^": "v", "*": "*", ">>": "<<", "^^": "vv", "vv": "^^", "<<": ">>"}
+    dleft = {">": "^", "<": "v", "v": ">", "^": "<", "*": "*", ">>": "^^", "^^": "<<", "vv": ">>", "<<": "vv"}
+    dright = {">": "v", "<": "^", "v": "<", "^": ">", "*": "*", ">>": "vv", "^^": ">>", "vv": "<<", "<<": "^^"}
+
+    arrprice = []
+    price = 0
+    j = 0
+    swerve = []
+    for j in range(10):
+        posr = x_cordinatestart[iii]
+        posc = y_cordinatestart[iii]
+        pval = aa[posr][posc]
+
+        # pos = cars[i]
+        np.random.seed(j)
+        swerve = np.random.random_sample(1000000)
+        k = 0
+        while pval != "*":
+            pval = aa[posr][posc]
+
+
+            if swerve[k] > 0.7:
+
+                if swerve[k] > 0.8:
+
+                    if swerve[k] > 0.9:
+
+                        pval = dopp[pval]
+                        price, posr, posc = score(pval, price, aa, posr, posc, tot_row,
+                                                  tot_col)  # move = turn_left(turn_left(move))
+
+                    else:
+                        pval = dleft[pval]  # move= turn_left(move)
+                        price, posr, posc = score(pval, price, aa, posr, posc, tot_row, tot_col)
+                else:
+                    pval = dright[pval]  # move = turn_right(move)
+                    price, posr, posc = score(pval, price, aa, posr, posc, tot_row, tot_col)
+
+
+
+            else:
+                price, posr, posc = score(pval, price, aa, posr, posc, tot_row, tot_col)
+
+            k += 1
+        arrprice.append(price)
+        price = 0
+        swerve = []
+
+    # for i in range(0, tot_row*tot_col):
+
+    # print(arrprice)
+
+    # print arrprice
+    #print( reduce(lambda x, y: x + y, arrprice))
+
+    y = reduce(lambda x, y: x + y, arrprice) / len(arrprice)
+    final.append(y)
+
+    arrprice = []
+
+    price = 0
+
+print(final)
+
+f3 = open("output.txt", "w")
+for k in range(0, len(final)):
+    f3.write("%s\n" % final[k])
